@@ -17,6 +17,7 @@ public class RotationLockProvider extends AppWidgetProvider {
 		for (int widgetId : widgetIds) {
 			Log.v(TAG, "Widget: "+widgetId);
 			Intent mIntent = new Intent(ctx, OrientationLockActivity.class);
+			mIntent.putExtra("us.alangerber.minimalorientationlock.WidgetClicked", true);
 			PendingIntent mPendingIntent = PendingIntent.getActivity(ctx, 0, mIntent, 0);
 			
 			RemoteViews mRemoteViews = new RemoteViews(ctx.getPackageName(), R.layout.rotation_button);
