@@ -11,7 +11,7 @@ import android.widget.RemoteViews;
 public class RotationLockProvider extends AppWidgetProvider {
 	private static final String TAG = "RotationLockProvider";
 
-	public void OnUpdate(Context ctx, AppWidgetManager awm, int[] widgetIds) {
+	public void onUpdate(Context ctx, AppWidgetManager awm, int[] widgetIds) {
 		//iterate through widget instances
 		Log.v(TAG, "Iterating thru widgets");
 		for (int widgetId : widgetIds) {
