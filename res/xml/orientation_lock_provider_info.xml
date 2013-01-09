@@ -4,6 +4,6 @@
     android:minWidth="40dp"
     android:minHeight="40dp"
     android:updatePeriodMillis="0"
-    android:initialLayout="@layout/rotation_button"
+    android:initialLayout="@layout/orientation_lock_button"
     android:resizeMode="none">
 </appwidget-provider>

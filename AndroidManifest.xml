@@ -15,20 +15,15 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <receiver android:name="us.alangerber.minimalorientationlock.RotationLockProvider" >
+        <receiver android:name="us.alangerber.minimalorientationlock.OrientationLockProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/rotation_lock_provider_info" />
+                android:resource="@xml/orientation_lock_provider_info" />
         </receiver>
-
-        <activity
-            android:name="us.alangerber.minimalorientationlock.OrientationLockActivity"
-            android:label="@string/title_activity_orientation_lock" >
-        </activity>
     </application>
 
 </manifest>

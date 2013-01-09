@@ -6,5 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_orientation_lock">OrientationLockActivity</string>
-
+    <string name="orientation_locked">Screen orientation locked.</string>
+    <string name="orientation_unlocked">Screen orientation unlocked.</string>
+    <string name="orientation_missing">Sorry, your phone does not support the screen orientation setting.</string>
+    
 </resources>
