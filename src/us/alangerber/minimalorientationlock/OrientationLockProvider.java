@@ -18,7 +18,7 @@ public class OrientationLockProvider extends AppWidgetProvider {
 			"us.alangerber.minimalorientationlock.INTENT_TOGGLE_ORIENTATION_LOCK";
 	
 	/**
-	 * Handle incoming intents. If the intent 
+	 * Catch incoming orientation-lock intents from the widget; toggle orientation lock if needed.
 	 */
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
@@ -26,12 +26,13 @@ public class OrientationLockProvider extends AppWidgetProvider {
         	int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
 			try {
+				//Toggle the orientation lock & set the icon appropriately
 				boolean result = toggleOrientationLock(ctx);
 				Toast.makeText(ctx, result? R.string.orientation_locked : R.string.orientation_unlocked,
 						Toast.LENGTH_SHORT).show();
 				setLockIcon(ctx, appWidgetId, result);
 			} catch (SettingNotFoundException e) {
-				//If the screen orientation setting isn't found, there's no way to recover.
+				//If the screen orientation setting isn't found, just show an error.
 				Toast.makeText(ctx, R.string.orientation_missing, Toast.LENGTH_LONG).show();
 				Log.e(TAG, "Cannot access screen orientation setting :(");
 			}
@@ -40,6 +41,9 @@ public class OrientationLockProvider extends AppWidgetProvider {
 		}
 	}
 
+	/**
+	 * Initialize the widget with the lock set appropriately.
+	 */
 	@Override
 	public void onUpdate(Context ctx, AppWidgetManager awm, int[] widgetIds) {
 		//iterate through widget instances
@@ -63,6 +67,9 @@ public class OrientationLockProvider extends AppWidgetProvider {
 		super.onUpdate(ctx, awm, widgetIds);
 	}
 	
+	/**
+	 * Toggle the orientation lock setting.
+	 */
 	private boolean toggleOrientationLock(Context ctx) throws SettingNotFoundException{
 		ContentResolver mContentResolver = ctx.getContentResolver();
 		if (Settings.System.getInt(mContentResolver, Settings.System.ACCELEROMETER_ROTATION) == 1){
@@ -74,6 +81,9 @@ public class OrientationLockProvider extends AppWidgetProvider {
 		}
 	}
 	
+	/**
+	 * Check the orientation lock setting.
+	 */
 	private boolean getOrientationLock(Context ctx) {
 		ContentResolver mContentResolver = ctx.getContentResolver();
 		try {
@@ -83,14 +93,19 @@ public class OrientationLockProvider extends AppWidgetProvider {
 		}
 	}
 	
+	/**
+	 * Change the lock icon on the widget.
+	 */
 	private void setLockIcon(Context ctx, int appWidgetId, boolean locked) {
         AppWidgetManager mgr = AppWidgetManager.getInstance(ctx);
 		RemoteViews mRemoteViews = new RemoteViews(ctx.getPackageName(), R.layout.orientation_lock_button);
+		
 		if (locked) {
 			mRemoteViews.setImageViewResource(R.id.lock_button, R.drawable.lock);
 		} else {
 			mRemoteViews.setImageViewResource(R.id.lock_button, R.drawable.lock_open);
 		}
+		
 		mgr.updateAppWidget(appWidgetId, mRemoteViews);
 	}
 }
