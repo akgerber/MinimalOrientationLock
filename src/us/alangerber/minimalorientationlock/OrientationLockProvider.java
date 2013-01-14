@@ -30,7 +30,7 @@ public class OrientationLockProvider extends AppWidgetProvider {
 				boolean result = toggleOrientationLock(ctx);
 				Toast.makeText(ctx, result? R.string.orientation_locked : R.string.orientation_unlocked,
 						Toast.LENGTH_SHORT).show();
-				setLockIcon(ctx, appWidgetId, result);
+				setUpWidgetViews(ctx, appWidgetId, result);
 			} catch (SettingNotFoundException e) {
 				//If the screen orientation setting isn't found, just show an error.
 				Toast.makeText(ctx, R.string.orientation_missing, Toast.LENGTH_LONG).show();
@@ -48,21 +48,7 @@ public class OrientationLockProvider extends AppWidgetProvider {
 	public void onUpdate(Context ctx, AppWidgetManager awm, int[] widgetIds) {
 		//iterate through widget instances
 		for (int widgetId : widgetIds) {
-			//Initialize a pending widget to tell this provider to lock/unlock the screen orientation setting
-			Intent mIntent = new Intent(ctx, OrientationLockProvider.class);
-			mIntent.setAction(INTENT_TOGGLE_ORIENTATION_LOCK);
-			mIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-			PendingIntent mPendingIntent = PendingIntent.getBroadcast(ctx, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-			
-			//Setup the widget UI, checking whether the rotation setting is set already
-			RemoteViews mRemoteViews = new RemoteViews(ctx.getPackageName(), R.layout.orientation_lock_button);
-			if (getOrientationLock(ctx)) {
-				mRemoteViews.setImageViewResource(R.id.lock_button, R.drawable.lock_open);
-			}
-			mRemoteViews.setOnClickPendingIntent(R.id.lock_button, mPendingIntent);
-			
-			awm.updateAppWidget(widgetId, mRemoteViews);
-
+			setUpWidgetViews(ctx, widgetId);
 		}
 		super.onUpdate(ctx, awm, widgetIds);
 	}
@@ -93,19 +79,34 @@ public class OrientationLockProvider extends AppWidgetProvider {
 		}
 	}
 	
-	/**
-	 * Change the lock icon on the widget.
-	 */
-	private void setLockIcon(Context ctx, int appWidgetId, boolean locked) {
+	
+	private void setUpWidgetViews(Context ctx, int appWidgetId, boolean locked) {
         AppWidgetManager mgr = AppWidgetManager.getInstance(ctx);
 		RemoteViews mRemoteViews = new RemoteViews(ctx.getPackageName(), R.layout.orientation_lock_button);
 		
+		//Set the lock image based on whether the orientation is locked
 		if (locked) {
-			mRemoteViews.setImageViewResource(R.id.lock_button, R.drawable.lock);
+			mRemoteViews.setImageViewResource(R.id.lock_button, R.drawable.lock_button);
 		} else {
-			mRemoteViews.setImageViewResource(R.id.lock_button, R.drawable.lock_open);
+			mRemoteViews.setImageViewResource(R.id.lock_button, R.drawable.lock_open_button);
 		}
 		
+		//Initialize a pending widget to tell this provider to lock/unlock the screen orientation setting
+		Intent mIntent = new Intent(ctx, OrientationLockProvider.class);
+		mIntent.setAction(INTENT_TOGGLE_ORIENTATION_LOCK);
+		mIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+		PendingIntent mPendingIntent = PendingIntent.getBroadcast(ctx, 0, mIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		
+		mRemoteViews.setOnClickPendingIntent(R.id.lock_button, mPendingIntent);
+		
 		mgr.updateAppWidget(appWidgetId, mRemoteViews);
+	}
+	
+	/**
+	 * Set up the widget UI, detecting whether the screen is locked
+	 */
+	private void setUpWidgetViews(Context ctx, int appWidgetId) {
+		boolean locked = getOrientationLock(ctx);
+		setUpWidgetViews(ctx, appWidgetId, locked);
 	}
 }
