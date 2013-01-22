@@ -71,7 +71,7 @@ public class OrientationLockProvider extends AppWidgetProvider {
 				new_state = ROTATION_ON;
 			}
 			writebackState(ctx, new_state);
-			Log.v(TAG, "setting state to " + new_state);
+			//Log.v(TAG, "setting state to " + new_state);
 		}
 		
 		/**
